@@ -1,0 +1,42 @@
+/* =========================================
+   IFI RESOURCE LIBRARY - ACCORDION ANIMATION
+   (Lightweight Elementor Version)
+========================================= */
+document.addEventListener("click", function(e) {
+  const summary = e.target.closest(".rl-wrapper summary");
+  if (!summary) return;
+  
+  const details = summary.parentElement;
+  if (!details || details.tagName !== "DETAILS") return;
+
+  e.preventDefault(); // Stop the default harsh snap
+  
+  if (details.open) {
+    // Smooth Close
+    details.style.overflow = "hidden";
+    details.style.height = details.offsetHeight + "px";
+    void details.offsetHeight; // Force reflow
+    details.style.height = summary.offsetHeight + "px";
+    
+    setTimeout(() => {
+      details.removeAttribute("open");
+      details.style.height = "";
+      details.style.overflow = "";
+    }, 300); // 300ms matches the CSS transition
+  } else {
+    // Smooth Open
+    details.setAttribute("open", "");
+    details.style.overflow = "hidden";
+    details.style.height = summary.offsetHeight + "px";
+    void details.offsetHeight; // Force reflow
+    
+    // Calculate full height needed
+    const endHeight = Array.from(details.children).reduce((acc, child) => acc + child.offsetHeight, 0);
+    details.style.height = endHeight + "px";
+    
+    setTimeout(() => {
+      details.style.height = "";
+      details.style.overflow = "";
+    }, 300);
+  }
+});
